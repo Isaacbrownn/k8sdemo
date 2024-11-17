@@ -21,6 +21,5 @@ phases:
 
       post_build:
     commands:
-      # Push the Docker image to ECR
       - echo Pushing Docker image to ECR...
       - docker push 344101797155.dkr.ecr.ca-central-1.amazonaws.com/samplerepo:latest
