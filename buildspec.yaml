@@ -2,20 +2,26 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      dotnet: 8.0
     commands:
-      - echo "Restoring .NET project dependencies..."
-      - dotnet restore aqa.csproj
-  build:
+      # Install kubectl for interacting with EKS
+      # - echo Installing kubectl...
+     # - curl -LO "https://dl.k8s.io/release/v1.27.0/bin/linux/amd64/kubectl"
+     # - chmod +x ./kubectl
+     # - mv ./kubectl /usr/local/bin/kubectl
+     # - export KUBECONFIG=$HOME/.kube/config
+
+  pre_build:
     commands:
-      - echo "Publishing the project..."
-      - dotnet publish aqa.csproj --configuration Release
-  post_build:
+      # Log in to Amazon ECR
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 344101797155.dkr.ecr.ca-central-1.amazonaws.com/samplerepo
+      - echo Building Docker image...
+      - docker build -t sample-dotnet-app .
+      # Tag the Docker image with the ECR repository URI
+      - docker tag sample-dotnet-app:latest 344101797155.dkr.ecr.ca-central-1.amazonaws.com/samplerepo 
+
+      post_build:
     commands:
-      - echo "Running tests..."
-      - dotnet test --no-build --verbosity normal
-artifacts:
-  files:
-    - 'bin/Release/net8.0/publish/**' # Use the default output directory for published files
-  discard-paths: yes
+      # Push the Docker image to ECR
+      - echo Pushing Docker image to ECR...
+      - docker push 344101797155.dkr.ecr.ca-central-1.amazonaws.com/samplerepo:latest
