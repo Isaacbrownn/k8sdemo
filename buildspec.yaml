@@ -28,7 +28,7 @@ phases:
       - docker push 344101797155.dkr.ecr.ca-central-1.amazonaws.com/samplerepo:latest
       # Deploy the application to Kubernetes (EKS)
       - echo "Deploying to Kubernetes (EKS)..."
-      - aws eks --region ca-central-1 update-kubeconfig --name democluster
+      - aws eks --region ca-central-1 update-kubeconfig --name k8s-boy
       - kubectl apply -f k8s-deployment-service.yaml  
 artifacts:
   files:
