@@ -19,6 +19,9 @@ phases:
       - docker build -t sample-dotnet-app .
       # Tag the Docker image with the ECR repository URI
       - docker tag sample-dotnet-app:latest 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest
+       # Generate imagedefinitions.json file for ECS deployment
+      - echo Creating imagedefinitions.json file...
+      - echo '[{"name": "my-app-container", "imageUri": "344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest"}]' > imagedefinitions.json
 
   post_build:
     commands:
@@ -32,4 +35,5 @@ phases:
      # - kubectl apply -f k8s-deployment-service.yaml  
 artifacts:
   files:
-    - k8s-deployment-service.yaml
+    #- k8s-deployment-service.yaml
+    - imagedefinitions.json
