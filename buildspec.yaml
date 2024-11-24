@@ -29,6 +29,6 @@ phases:
       - echo "Deploying to Kubernetes (EKS)..."
       - aws eks --region us-east-1 update-kubeconfig --name k8s-boy
       - kubectl apply -f k8s-deployment-service.yaml  
+ artifacts:
   files:
-      - k8s-deployment-service.yaml
-   
+    - k8s-deployment-service.yaml
