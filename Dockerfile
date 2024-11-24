@@ -5,4 +5,4 @@ RUN dotnet restore
 RUN dotnet publish -c Release -o out
 WORKDIR /app/out
 EXPOSE 80
-ENTRYPOINT {"dotnet","aqa.dll"} 
+ENTRYPOINT ["dotnet","aqa.dll"]
