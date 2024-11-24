@@ -27,13 +27,15 @@ phases:
        # Push the Docker image to ECR
       - echo Pushing Docker image to ECR...
       - docker push 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest
-         # Generate imagedefinitions.json file for ECS deployment
-      - echo Creating imagedefinitions.json file...
-      - echo '[{"name": "devcluster", "imageUri": "344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest"}]' > imagedefinitions.json
      # Deploy the application to Kubernetes (EKS)
      # - echo "Deploying to Kubernetes (EKS)..."
       #- aws eks --region us-east-1 update-kubeconfig --name k8s-boy
      # - kubectl apply -f k8s-deployment-service.yaml  
+
+     build:
+    commands:
+      - echo Creating imagedefinitions.json file...
+      - echo '[{"name": "devcluster", "imageUri": "344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest"}]' > imagedefinitions.json
 artifacts:
   files:
     #- k8s-deployment-service.yaml
