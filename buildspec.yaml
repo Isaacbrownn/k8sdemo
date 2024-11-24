@@ -14,18 +14,18 @@ phases:
     commands:
       # Log in to Amazon ECR
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 344101797155.dkr.ecr.ca-central-1.amazonaws.com/samplerepo
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo
       - echo Building Docker image...
       - docker build -t sample-dotnet-app .
       # Tag the Docker image with the ECR repository URI
-      - docker tag sample-dotnet-app:latest 344101797155.dkr.ecr.ca-central-1.amazonaws.com/samplerepo:latest
+      - docker tag sample-dotnet-app:latest 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest
 
   post_build:
     commands:
        #- aws sts get-caller-identity --output text  # Verify assumed role
        # Push the Docker image to ECR
       - echo Pushing Docker image to ECR...
-      - docker push 344101797155.dkr.ecr.ca-central-1.amazonaws.com/samplerepo:latest
+      - docker push 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest
       # Deploy the application to Kubernetes (EKS)
       - echo "Deploying to Kubernetes (EKS)..."
       - aws eks --region ca-central-1 update-kubeconfig --name k8s-boy
