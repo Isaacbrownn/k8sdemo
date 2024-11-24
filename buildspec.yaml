@@ -1,24 +1,28 @@
-version: 0.2
+  version: 0.2
 
 phases:
-  install:
-    commands:
-          - echo Logging in to DockerHub...
   pre_build:
     commands:
-      # Log in to Amazon ECR
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo
-      - echo Building Docker image...
-      - docker build -t sample-dotnet-app .
-      # Tag the Docker image with the ECR repository URI
-      - docker tag sample-dotnet-app:latest 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest
+      - aws --version
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 344101797155.dkr.ecr.us-east-1.amazonaws.com 
+      - REPOSITORY_URI=344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
-       # Push the Docker image to ECR
-       - echo Pushing Docker image to ECR...
-       - docker push 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest
-      - printf '[{"name":"'devcluster'","imageUri":"%s"}]' 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest > imagedefinitions.json
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"my-demo-repo","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
 
@@ -30,3 +34,7 @@ artifacts:
 
 
  
+
+
+
+  
