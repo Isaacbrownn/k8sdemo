@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: sample-container
-        image: 344101797155.dkr.ecr.us-east-2.amazonaws.com/my-demo-repo:latest
+        image: 344101797155.dkr.ecr.us-east-1.amazonaws.com/my-demo-repo:latest
         ports:
         - containerPort: 80
 
