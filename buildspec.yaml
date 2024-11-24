@@ -30,5 +30,5 @@ phases:
       - aws eks --region us-east-1 update-kubeconfig --name k8s-boy
       - kubectl apply -f k8s-deployment-service.yaml  
   files:
-    - k8s-deployment-service.yaml
+      - k8s-deployment-service.yaml
    
